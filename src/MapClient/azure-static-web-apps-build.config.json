@@ -1,0 +1,4 @@
+﻿{
+  "app_build_command": "npm run build",
+  "node_version": "20.0.0"
+}
