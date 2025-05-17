@@ -1,0 +1,31 @@
+services:
+  hive-redis:
+    image: redis:latest
+    container_name: hive-redis
+    ports:
+      - "6379:6379"
+
+  hive-communication-control:
+    build:
+      context: ./CommunicationControl
+      dockerfile: CommunicationControl.Dockerfile
+    container_name: hive-communication-control
+    ports:
+      - "8080:8080"
+    environment:
+      - REDIS__CONNECTIONSTRING=hive-redis:6379
+    depends_on:
+      - hive-redis
+       
+
+  hive-mapclient:
+    build:
+      context: ./MapClient
+      dockerfile: MapClient.Dockerfile
+      args: 
+        - VITE_API_BASE_URL=http://hive-communication-control:8080/api/v1/client
+    container_name: hive-mapclient
+    ports:
+      - "3000:80"
+    depends_on:
+      - hive-communication-control
