@@ -1,0 +1,25 @@
+services:
+  hive-redis:
+    image: redis:latest
+    container_name: hive-redis
+    ports:
+      - "6379:6379"
+
+  hive-communication-control:
+    image: registry.digitalocean.com/herasymchuk-registry/communication-control
+    container_name: hive-communication-control
+    ports:
+      - "8080:8080"
+    environment:
+      - REDIS__CONNECTIONSTRING=hive-redis:6379
+    depends_on:
+      - hive-redis
+       
+
+  hive-mapclient:
+    image: registry.digitalocean.com/herasymchuk-registry/mapclient
+    container_name: hive-mapclient
+    ports:
+      - "80:80"
+    depends_on:
+      - hive-communication-control
