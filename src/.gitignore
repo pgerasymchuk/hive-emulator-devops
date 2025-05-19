@@ -1,0 +1,6 @@
+**/bin/
+**/obj/
+**/Logs/
+**/node_modules/
+**/dist/
+**/.idea/
