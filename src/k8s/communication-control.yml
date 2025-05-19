@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: communication-control
+spec:
+  selector:
+    app: communication-control
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: communication-control
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: communication-control
+  template:
+    metadata:
+      labels:
+        app: communication-control
+    spec:
+      imagePullSecrets:
+        - name: do-registry
+      containers:
+        - name: communication-control
+          image: registry.digitalocean.com/herasymchuk-registry/communication-control
+          ports:
+            - containerPort: 8080
+          env:
+            - name: REDIS__CONNECTIONSTRING
+              value: "redis:6379"
